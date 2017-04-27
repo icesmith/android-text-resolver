@@ -1,0 +1,5 @@
+<resources>
+    <string name="description">{{plugin_name}} resolves text references.</string>
+    <string name="plugin_name">{{platform_name}} Text Resolver</string>
+    <string name="platform_name">Android</string>
+</resources>

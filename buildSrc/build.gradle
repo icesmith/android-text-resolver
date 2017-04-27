@@ -1,0 +1,35 @@
+apply plugin: 'groovy'
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.7'
+    }
+}
+
+apply plugin: 'com.gradle.plugin-publish'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+
+pluginBundle {
+    version = '1.0.3'
+
+    website = 'https://github.com/icesmith/android-text-resolver'
+    vcsUrl = 'https://github.com/icesmith/android-text-resolver'
+    description = 'This plugin allows you to refer one android string from another.'
+    tags = ['android', 'text', 'string', 'resolver', 'reference']
+
+    plugins {
+        textResolver {
+            id = 'com.icesmith.androidtextresolver'
+            displayName = 'Android Text Resolver'
+        }
+    }
+}

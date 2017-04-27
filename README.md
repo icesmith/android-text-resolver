@@ -1,5 +1,5 @@
 # Description
-The plugin allows you to refer one string from another.
+The plugin allows you to refer one string from another. The plugin [located](https://plugins.gradle.org/plugin/com.icesmith.androidtextresolver) on Gradle plugin portal.
 # Integration
 Just add the next code into you app or library module level build.gradle
 ```gradle
@@ -16,7 +16,6 @@ buildscript {
 
 apply plugin: "com.icesmith.androidtextresolver"
 ```
-
 # Usage
 Use `{{string_id}}` syntax to refer strings. For example
 ```xml

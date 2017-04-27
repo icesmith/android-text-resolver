@@ -26,3 +26,6 @@ Use `{{string_id}}` syntax to refer strings. For example
     <string name="app_description">Name of my application is: {{app_name}}</string>
 </resources>
 ```
+
+# Sources
+The plugin code can be found [here](https://github.com/icesmith/android-text-resolver/blob/master/buildSrc/src/main/groovy/com/icesmith/androidtextresolver/AndroidTextResolverPlugin.groovy)

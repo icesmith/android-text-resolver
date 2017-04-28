@@ -12,6 +12,8 @@ class AndroidTextResolverPlugin implements Plugin<Project> {
             throw new Exception('the plugin can be applied only to android projects')
         }
 
+        android.extensions.create('textresolver', AndroidTextResolverPluginExtension)
+
         if (android.hasProperty('libraryVariants')) {
             android.libraryVariants.all { variant ->
                 String variantName = variant.name.substring(0, 1).toUpperCase() + variant.name.substring(1)
@@ -19,35 +21,40 @@ class AndroidTextResolverPlugin implements Plugin<Project> {
 
                 TaskContainer tasks = project.getTasks()
                 tasks.getByName(packageTaskName).doLast {
-                    processResourcesDirectory variant.getMergeResources().outputDir
+                    def File resDir = variant.getMergeResources().outputDir
+                    def AndroidTextResolverPluginExtension extension = android.extensions.textresolver
+                    processResourcesDirectory resDir, extension
                 }
             }
         } else if (android.hasProperty('applicationVariants')) {
             android.applicationVariants.all { variant ->
                 variant.mergeResources.doLast {
-                    processResourcesDirectory variant.getMergeResources().outputDir
+                    def File resDir = variant.getMergeResources().outputDir
+                    def AndroidTextResolverPluginExtension extension = android.extensions.textresolver
+                    processResourcesDirectory resDir, extension
                 }
             }
         }
     }
 
-    private static void processResourcesDirectory(File resDir) {
+    private static void processResourcesDirectory(File resDir, AndroidTextResolverPluginExtension extension) {
         Map<String, String> defaultStringMap = null;
         File defaultValuesFile = new File(resDir, "values/values.xml")
         if (defaultValuesFile.exists()) {
-            defaultStringMap = processValuesFile(defaultValuesFile, null)
+            defaultStringMap = processValuesFile defaultValuesFile, extension, null
         }
 
         resDir.eachDir { dir ->
             if (dir.name.startsWith("values") && dir.name != "values") {
                 File valuesFile = new File(dir, dir.name + ".xml")
-                processValuesFile(valuesFile, defaultStringMap)
+                processValuesFile valuesFile, extension, defaultStringMap
             }
         }
     }
 
     @Nullable
     private static Map<String, String> processValuesFile(File valuesFile,
+                                                         AndroidTextResolverPluginExtension extension,
                                                          @Nullable Map<String, String> defaultStringMap) {
         Node rootNode = new XmlParser().parse(valuesFile)
 
@@ -60,7 +67,7 @@ class AndroidTextResolverPlugin implements Plugin<Project> {
         boolean changed = false
         for (Node stringNode : rootNode.string) {
             String text = stringNode.text()
-            String updatedText = processString(text, stringMap, defaultStringMap)
+            String updatedText = processString text, extension.pattern, stringMap, defaultStringMap
             if (updatedText != text) {
                 stringNode.setValue(updatedText)
                 changed = true
@@ -80,20 +87,26 @@ class AndroidTextResolverPlugin implements Plugin<Project> {
     }
 
     private static String processString(String str,
+                                        String pattern,
                                         Map<String, String> stringMap,
                                         @Nullable Map<String, String> defaultStringMap) {
 
-        return str.replaceAll(/\{\{(.*?)\}\}/) { fullMatch, stringName ->
-            String referencedString = stringMap[stringName]
+
+        return str.replaceAll(pattern) { fullMatch, stringName ->
+            def String referencedString = stringMap[stringName]
             if (referencedString == null && defaultStringMap != null) {
                 referencedString = defaultStringMap[stringName]
             }
 
             if (referencedString != null) {
-                return processString(referencedString, stringMap, defaultStringMap)
+                return processString(referencedString, pattern, stringMap, defaultStringMap)
             } else {
                 throw new Exception("unknown string reference: " + stringName + " from: " + str);
             }
         }
     }
+}
+
+class AndroidTextResolverPluginExtension {
+    def String pattern = /\{\{(.*?)\}\}/
 }

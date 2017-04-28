@@ -10,7 +10,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.android-text-resolver:buildSrc:1.0.3"
+    classpath "gradle.plugin.android-text-resolver:buildSrc:1.1.0"
   }
 }
 
@@ -25,6 +25,16 @@ Use `{{string_id}}` syntax to refer strings. For example
     <string name="app_name">My {{super}} App</string>
     <string name="app_description">Name of my application is: {{app_name}}</string>
 </resources>
+```
+
+# Configuration
+You can configure pattern, which will be used to find string references, for example, to use `[]` instead of `{{}}` add next code into your `build.gradle`
+```gradle
+android {
+  textresolver {
+    pattern = /\[(.*?)\]/
+  }
+}
 ```
 
 # Sources

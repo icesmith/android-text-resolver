@@ -1,13 +1,14 @@
 package com.icesmith.androidtextresolver
 
-import org.gradle.api.Nullable
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 import org.gradle.api.tasks.TaskContainer
 
+import javax.annotation.Nullable
+
 class AndroidTextResolverPlugin implements Plugin<Project> {
     void apply(Project project) {
-        def android = project.getProperties().get('android');
+        def android = project.getProperties().get('android')
         if (android == null) {
             throw new Exception('the plugin can be applied only to android projects')
         }
@@ -21,16 +22,17 @@ class AndroidTextResolverPlugin implements Plugin<Project> {
 
                 TaskContainer tasks = project.getTasks()
                 tasks.getByName(packageTaskName).doLast {
-                    def File resDir = variant.getMergeResources().outputDir
-                    def AndroidTextResolverPluginExtension extension = android.extensions.textresolver
+                    String resDirPath = "${project.buildDir}/intermediates/bundles/${variant.name}/res"
+                    File resDir = new File(resDirPath)
+                    AndroidTextResolverPluginExtension extension = android.extensions.textresolver
                     processResourcesDirectory resDir, extension
                 }
             }
         } else if (android.hasProperty('applicationVariants')) {
             android.applicationVariants.all { variant ->
                 variant.mergeResources.doLast {
-                    def File resDir = variant.getMergeResources().outputDir
-                    def AndroidTextResolverPluginExtension extension = android.extensions.textresolver
+                    File resDir = variant.getMergeResources().outputDir
+                    AndroidTextResolverPluginExtension extension = android.extensions.textresolver
                     processResourcesDirectory resDir, extension
                 }
             }
@@ -38,7 +40,7 @@ class AndroidTextResolverPlugin implements Plugin<Project> {
     }
 
     private static void processResourcesDirectory(File resDir, AndroidTextResolverPluginExtension extension) {
-        Map<String, String> defaultStringMap = null;
+        Map<String, String> defaultStringMap = null
         File defaultValuesFile = new File(resDir, "values/values.xml")
         if (defaultValuesFile.exists()) {
             defaultStringMap = processValuesFile defaultValuesFile, extension, null
@@ -108,5 +110,5 @@ class AndroidTextResolverPlugin implements Plugin<Project> {
 }
 
 class AndroidTextResolverPluginExtension {
-    def String pattern = /\{\{(.*?)\}\}/
+    String pattern = /\{\{(.*?)\}\}/
 }

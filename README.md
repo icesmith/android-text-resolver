@@ -1,3 +1,9 @@
+# Android Gradle plugin 3.0 and above
+The library doesn't work with Android gradle plugin version 3.0 and above because 
+the new version of the plugin uses aapt2 which packs resources into .flat binary format, 
+so packed resources are unavailable for the library. As a temporary solution you can disable aapt2 
+by setting android.enableAapt2=false in your gradle.properties file.
+
 # Description
 The plugin allows you to refer one string from another. The plugin [located](https://plugins.gradle.org/plugin/com.icesmith.androidtextresolver) on Gradle plugin portal.
 # Integration
@@ -10,7 +16,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.android-text-resolver:buildSrc:1.1.0"
+    classpath "gradle.plugin.android-text-resolver:buildSrc:1.2.0"
   }
 }
 

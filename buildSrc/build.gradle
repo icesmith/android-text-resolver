@@ -7,7 +7,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.7'
+        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.9'
     }
 }
 
@@ -19,7 +19,7 @@ dependencies {
 }
 
 pluginBundle {
-    version = '1.1.0'
+    version = '1.2.0'
 
     website = 'https://github.com/icesmith/android-text-resolver'
     vcsUrl = 'https://github.com/icesmith/android-text-resolver'

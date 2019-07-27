@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Lib демо</string>
+    <string name="description">{{plugin_name}} находит текстовые ссылки.</string>
+</resources>

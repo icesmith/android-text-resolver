@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Lib Demo</string>
+    <string name="app_name">Lib demo</string>
+    <string name="description">{{plugin_name}} resolves text references.</string>
 </resources>
